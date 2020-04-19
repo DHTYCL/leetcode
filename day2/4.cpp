@@ -4,32 +4,33 @@
 #include <vector>
 using namespace std;
 
-int expand(string s, int left, int right)
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 {
-    while (left >= 0 && right < s.size() && s[left] == s[right]) {
-        left--;
-        right++;
-    }
-    return right - left - 1;
-}
-
-string longestPalindrome(string s) {
-    int start = 0, end = 0;
-    for (int i = 0;i < s.size(); i++) {
-        int len1 = expand(s, i, i);
-        int len2 = expand(s, i, i + 1);
-        int len = max(len1, len2);
-        if (len > end - start +1) {
-            end = i + len/2;
-            start = end - len +1;
+    int num = nums1.size() + nums2.size();
+    int idx = 0;
+    vector<int> res(num);
+    for(int idx1 = 0, idx2 = 0; idx1<nums1.size()||idx2<nums2.size();) {
+        if (idx1 == nums1.size()) {
+            res[idx++] =nums2[idx2++];
+            continue;
+        }
+        if (idx2 == nums2.size()) {
+            res[idx++] =nums1[idx1++];
+            continue;
+        }
+        if (nums1[idx1] < nums2[idx2]) {
+            res[idx++] =nums1[idx1++];
+        } else {
+            res[idx++] =nums2[idx2++];
         }
     }
-    return s.substr(start, end - start + 1);
+    if (num%2 == 0) {
+       return (res[num/2-1] + res[num/2])/2.0;
+    } else {
+       return res[num/2];
+    }
 }
 
-
 int main(){
-    cout << longestPalindrome("babad") << endl;
-    cout << longestPalindrome("abba") << endl;
     return 0;
 }
